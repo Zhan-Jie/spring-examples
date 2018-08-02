@@ -11,7 +11,16 @@ public class MainController {
 
     @PostMapping(path = "/add")
     public String addUser(@RequestParam String name, @RequestParam String email) {
-        User u = new User();
+        User u;
+        u = userRepository.findFirstByNameOrEmail(name, email);
+        if (u != null) {
+            if (name.equals(u.getName())) {
+                return String.format("user with the name '%s' already exists", name);
+            } else {
+                return String.format("user with the email '%s' already exists", email);
+            }
+        }
+        u = new User();
         u.setName(name);
         u.setEmail(email);
         u = userRepository.save(u);
