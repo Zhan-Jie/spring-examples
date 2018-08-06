@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bootstrap 实例</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <style>
+        .table {
+            table-layout: fixed;
+        }
+        .table td {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <table id="records" class="table table-striped">
+                <caption>记录列表</caption>
+                <thead>
+                <tr>
+                    <th>标题</th>
+                    <th>用户名</th>
+                    <th>备注</th>
+                    <th>修改时间</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    var url = '/api/record/list?pageIndex=0&pageSize=10';
+
+    $.get(url, function (data) {
+        if (data['code'] !== 0) {
+            $('body').append('<div class="alert alert-warning">'+ data['message'] +'</div>');
+            return;
+        }
+        var records = data['data']['records'];
+        var table = $('tbody');
+        records.forEach(function (item, index) {
+            table.append('<tr>\n' +
+                '<td>' + item['title'] + '</td>\n' +
+                '<td>' + item['name'] +'</td>\n' +
+                '<td>' + item['note'] +'</td>\n' +
+                '<td>' + item['updatedAt'] +'</td>\n' +
+                '</tr>');
+        });
+        if (records.length < 1) {
+            for (var i = 0; i < 10; i++) {
+                table.append('<tr>\n' +
+                    '<td>&nbsp;</td>\n' +
+                    '<td>&nbsp;</td>\n' +
+                    '<td>&nbsp;</td>\n' +
+                    '<td>&nbsp;</td>\n' +
+                    '</tr>');
+            }
+        }
+    });
+</script>
+</body>
+</html>
