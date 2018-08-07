@@ -3,6 +3,9 @@ package zhanj;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,20 +19,23 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
-    public Long add(User user) {
-        return userRepository.save(user).getId();
+    @CachePut(value = "user", key = "#root.caches[0].name+':'+#user.id")
+    public User add(User user) {
+        return userRepository.save(user);
     }
 
-    public int update(User user) {
-        userRepository.save(user);
-        return 1;
+    @CachePut(value = "user", key = "#root.caches[0].name+':'+#user.id")
+    public User update(User user) {
+        return userRepository.save(user);
     }
 
+    @CacheEvict(value = "user")
     public int delete(long id) {
         userRepository.deleteById(id);
         return 1;
     }
 
+    @Cacheable(value = "user", unless = "#result==null")
     public User findUser(long id) {
         log.info("call findUser(id = {})", id);
         Optional<User> result = userRepository.findById(id);

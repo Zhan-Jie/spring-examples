@@ -3,6 +3,8 @@ package zhanj;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.*;
 import org.springframework.cache.interceptor.KeyGenerator;
@@ -22,6 +24,8 @@ import java.time.Duration;
 @Configuration
 @EnableCaching
 public class RedisConfig extends CachingConfigurerSupport {
+    private static final Logger log = LoggerFactory.getLogger(RedisConfig.class);
+
     @Bean
     public KeyGenerator keyGenerator() {
         return new KeyGenerator() {
@@ -70,7 +74,7 @@ public class RedisConfig extends CachingConfigurerSupport {
     public RedisCacheConfiguration redisCacheConfiguration(RedisTemplate redisTemplate) {
         RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig();
         return configuration.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(redisTemplate.getValueSerializer()))
-        .entryTtl(Duration.ofMinutes(1));
+        .entryTtl(Duration.ofMinutes(5));
     }
 
     @Bean
