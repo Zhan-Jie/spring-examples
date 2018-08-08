@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
         // update database
         user = userRepository.save(user);
         // update cache
-        ops.set(getUserKey(id), user);
+        ops.set(getUserKey(id), user, 2, TimeUnit.MINUTES);
         return user;
     }
 }
