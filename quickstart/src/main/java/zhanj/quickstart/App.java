@@ -74,8 +74,9 @@ public class App {
                 writeToFile(result.get(), sourceDir + File.separator + "App.java");
             }
         } catch (Exception e) {
-            e.printStackTrace();
             System.err.println(e.getMessage());
+            HelpFormatter formatter = new HelpFormatter();
+            formatter.printHelp("Quickstart", options);
         }
     }
 
