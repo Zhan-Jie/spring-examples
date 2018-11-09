@@ -32,8 +32,8 @@ public class App {
                     + "src" + File.separator
                     + "main" + File.separator
                     + "java" + File.separator
-                    + groupId + File.separator
-                    + artifactId;
+                    + groupId.replaceAll("\\.", "\\".equals(File.separator) ? "\\\\" : File.separator) + File.separator
+                    + artifactId.replaceAll("-", "");
             createDirectory(sourceDir);
 
             String resourcesDir = artifactId + File.separator
@@ -67,7 +67,7 @@ public class App {
             InputStream app = ClassLoader.getSystemResourceAsStream("App.java.template");
             reader = new BufferedReader(new InputStreamReader(app, StandardCharsets.UTF_8));
             result = reader.lines().map(l -> l.replaceAll("\\{\\{ group-id }}", groupId))
-                    .map(l -> l.replaceAll("\\{\\{ artifact-id }}", artifactId))
+                    .map(l -> l.replaceAll("\\{\\{ artifact-id }}", artifactId.replaceAll("-", "")))
                     .reduce((l1, l2) -> l1 + "\n" + l2);
             reader.close();
             if (result.isPresent()) {

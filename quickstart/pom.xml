@@ -25,4 +25,11 @@
     </dependency>
   </dependencies>
 
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/template</directory>
+      </resource>
+    </resources>
+  </build>
 </project>
